@@ -233,6 +233,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessObjects\Category.cs" />
+    <Compile Include="BusinessObjects\INonPersistent.cs" />
+    <Compile Include="BusinessObjects\MyInitializer.cs" />
+    <Compile Include="BusinessObjects\NPToy.cs" />
+    <Compile Include="BusinessObjects\Toy.cs" />
+    <Compile Include="BusinessObjects\ToysContextInitializer.cs" />
+    <Compile Include="Controllers\NPViewController.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DatabaseUpdate\Updater.cs" />
     <Compile Include="Module.cs">
       <SubType>Component</SubType>
