@@ -1,7 +1,9 @@
 ﻿using DevExpress.ExpressApp.Data;
+using DevExpress.Persistent.Base;
 
 namespace Toys.Module.BusinessObjects
 {
+    [NavigationItem("Main")]
     public class Toy
     {
         [Key]
