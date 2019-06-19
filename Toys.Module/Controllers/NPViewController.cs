@@ -92,7 +92,7 @@ namespace Toys.Module.Controllers
 
                 else
                 {
-
+                    ((NonPersistentObjectSpace)objectSpace).GetObject(obj);
                     //((IXafEntityObject)obj).OnSaving();
                     ((INonPersistent)obj).NPOnSaving(persistentOS);
                 }

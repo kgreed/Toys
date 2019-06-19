@@ -57,8 +57,8 @@ namespace Toys.Module.BusinessObjects
         public void NPOnSaving(IObjectSpace osParam)
         {
             var os = ((NonPersistentObjectSpace)ObjectSpace).AdditionalObjectSpaces.FirstOrDefault();  // why cant I use this instead of passing in as a parameter?
+            var areSame = osParam.Equals(os); // true
 
-            //os = osParam  // this works
             var category = os.FindObject<Category>(CriteriaOperator.Parse("[Name] = ?", CategoryName));
             if (category == null)
             {
