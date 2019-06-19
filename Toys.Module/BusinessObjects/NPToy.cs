@@ -9,7 +9,7 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Model;
 using DevExpress.Persistent.Base;
-using DevExpress.Xpo;
+ 
 
 namespace Toys.Module.BusinessObjects
 {
@@ -21,7 +21,7 @@ namespace Toys.Module.BusinessObjects
         [DevExpress.ExpressApp.Data.Key]
         [ModelDefault("AllowEdit", "False")]
         public int Id { get; set; }
-        [PersistentAlias("NPToy.Name")] // doesnt work
+       
         public string Name { get; set; }
 
         public int CategoryId { get; set; }
