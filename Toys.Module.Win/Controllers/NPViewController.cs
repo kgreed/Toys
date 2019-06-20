@@ -167,9 +167,7 @@ namespace Toys.Module.Controllers
         private void ParametrizedAction1_Execute(object sender, DevExpress.ExpressApp.Actions.ParametrizedActionExecuteEventArgs e)
         {
              SearchText = (String)e.ParameterCurrentValue;
-            // ((ListView)View).Refresh();
-            // ((ListView)View).CollectionSource.Reload();
-           // ((ListView)View).RefreshDataSource();
+             View.ObjectSpace.Refresh();
         }
 
         
