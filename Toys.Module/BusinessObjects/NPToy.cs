@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DevExpress.Data.Filtering;
@@ -18,6 +20,10 @@ namespace Toys.Module.BusinessObjects
     [NavigationItem("Main")]
     public class NPToy : INonPersistent, IObjectSpaceLink, INotifyPropertyChanged
     {
+        public NPToy() {
+            
+        }
+
         [DevExpress.ExpressApp.Data.Key]
         [ModelDefault("AllowEdit", "False")]
         public int Id { get; set; }
@@ -44,12 +50,22 @@ namespace Toys.Module.BusinessObjects
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        [Browsable(false)]
+        public string SearchText { get; set; }
         public List<INonPersistent> GetData(IObjectSpace os)
         {
             using (var connect = new ToysDbContext())
             {
-                const string sql = "select t.Id, t.Name, c.Id as CategoryId, c.Name as CategoryName from toys t inner join categories c on t.Category_Id = c.Id";
-                var results = connect.Database.SqlQuery<NPToy>(sql).ToList();
+                var parameters = new List<SqlParameter>();
+                var sql = "select t.Id, t.Name, c.Id as CategoryId, c.Name as CategoryName from toys t inner join categories c on t.Category_Id = c.Id";
+            
+                if (SearchText?.Length > 0)
+                {
+                    sql = sql + " where t.name like @name";
+                    parameters.Add( new SqlParameter("@name",$"%{SearchText}%"));
+                }
+
+                var results = connect.Database.SqlQuery<NPToy>(sql,parameters.ToArray()).ToList();
                 return results.ConvertAll(x => (INonPersistent)x);
             }
         }

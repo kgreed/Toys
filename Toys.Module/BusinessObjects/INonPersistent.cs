@@ -9,5 +9,6 @@ namespace Toys.Module.BusinessObjects
 
 
         void NPOnSaving(IObjectSpace persistentOs);
+        string SearchText { get; set; }
     }
 }

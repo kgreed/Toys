@@ -2,25 +2,30 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Forms;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using Toys.Module.BusinessObjects;
+using ListView = DevExpress.ExpressApp.ListView;
 
 namespace Toys.Module.Controllers
 {
     // https://documentation.devexpress.com/eXpressAppFramework/115672/Task-Based-Help/Business-Model-Design/Non-Persistent-Objects/How-to-Perform-CRUD-Operations-with-Non-Persistent-Objects
     public partial class NonPersistentController : ViewController
     {
+        private DevExpress.ExpressApp.Actions.ParametrizedAction parametrizedAction1;
+        private IContainer components;
         private static List<INonPersistent> objectsCache;
-
+        private string SearchText;
         static NonPersistentController()
         {
         }
         public NonPersistentController()
          : base()
         {
-
+            InitializeComponent();
             this.TargetObjectType = typeof(INonPersistent);
+            
         }
         private void ObjectSpace_CustomRefresh(object sender, HandledEventArgs e)
         {
@@ -53,6 +58,7 @@ namespace Toys.Module.Controllers
         private void LoadObjectsCache(IObjectSpace objectSpace)
         {
             var npObj = (INonPersistent)Activator.CreateInstance(View.ObjectTypeInfo.Type);
+            npObj.SearchText = SearchText;
             objectsCache = npObj.GetData(objectSpace);
         }
 
@@ -135,5 +141,37 @@ namespace Toys.Module.Controllers
             }
             base.OnDeactivated();
         }
+
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.parametrizedAction1 = new DevExpress.ExpressApp.Actions.ParametrizedAction(this.components);
+            // 
+            // parametrizedAction1
+            // 
+            this.parametrizedAction1.Caption = "Text Search";
+            this.parametrizedAction1.Category = "RecordsNavigation";
+            this.parametrizedAction1.ConfirmationMessage = null;
+            this.parametrizedAction1.Id = "TextSearch";
+            this.parametrizedAction1.NullValuePrompt = null;
+            this.parametrizedAction1.ShortCaption = null;
+            this.parametrizedAction1.ToolTip = null;
+            this.parametrizedAction1.Execute += new DevExpress.ExpressApp.Actions.ParametrizedActionExecuteEventHandler(this.ParametrizedAction1_Execute);
+            // 
+            // NonPersistentController
+            // 
+            this.Actions.Add(this.parametrizedAction1);
+
+        }
+
+        private void ParametrizedAction1_Execute(object sender, DevExpress.ExpressApp.Actions.ParametrizedActionExecuteEventArgs e)
+        {
+             SearchText = (String)e.ParameterCurrentValue;
+            // ((ListView)View).Refresh();
+            // ((ListView)View).CollectionSource.Reload();
+           // ((ListView)View).RefreshDataSource();
+        }
+
+        
     }
 }
