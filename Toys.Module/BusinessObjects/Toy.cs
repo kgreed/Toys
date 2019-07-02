@@ -1,4 +1,5 @@
-﻿using DevExpress.ExpressApp.Data;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using DevExpress.ExpressApp.Data;
 using DevExpress.Persistent.Base;
 
 namespace Toys.Module.BusinessObjects
@@ -11,8 +12,8 @@ namespace Toys.Module.BusinessObjects
 
         public string Name { get; set; }
 
+        public int Category_Id { get; set; }
+        [ForeignKey("Category_Id")]
         public virtual Category Category { get; set; }
-
-
     }
 }

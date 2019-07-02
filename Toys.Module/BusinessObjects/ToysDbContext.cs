@@ -15,7 +15,7 @@ namespace Toys.Module.BusinessObjects {
         public ToysDbContext(String connectionString)
             : base(connectionString)
         {
-            Database.SetInitializer(new MyInitializer());
+           Database.SetInitializer(new MyInitializer());
         }
         public ToysDbContext(DbConnection connection)
             : base(connection, false)
@@ -25,10 +25,21 @@ namespace Toys.Module.BusinessObjects {
         public ToysDbContext()
             : base("name=ConnectionString")
         {
-            Database.SetInitializer(new MyInitializer());
+             Database.SetInitializer(new MyInitializer());
         }
+
+       // public ToysDbContext() { }
+
         public DbSet<ModuleInfo> ModulesInfo { get; set; }
         public DbSet<Toy> Toys { get; set; }
         public DbSet<Category> Categories { get; set; }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<Toy>().ToTable("Toys");
+            //modelBuilder.Entity<Category>().ToTable("Categories");
+            //modelBuilder.Entity<Category>().HasMany(x=>x.t)
+
+        }
     }
 }
