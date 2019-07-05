@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using DevExpress.ExpressApp;
@@ -11,7 +12,7 @@ using ListView = DevExpress.ExpressApp.ListView;
 namespace Toys.Module.Controllers
 {
     // https://documentation.devexpress.com/eXpressAppFramework/115672/Task-Based-Help/Business-Model-Design/Non-Persistent-Objects/How-to-Perform-CRUD-Operations-with-Non-Persistent-Objects
-    public partial class NonPersistentController : ViewController
+    public partial class NonPersistentController : ObjectViewController<ListView, INonPersistent>
     {
         private DevExpress.ExpressApp.Actions.ParametrizedAction parametrizedAction1;
         private IContainer components;
@@ -104,7 +105,8 @@ namespace Toys.Module.Controllers
                 }
             }
             persistentOS.CommitChanges();
-
+            objectSpace.Rollback(false);
+            objectSpace.Refresh();  // focus goes to first
         }
 
 
@@ -121,6 +123,9 @@ namespace Toys.Module.Controllers
             var persistentOS = this.Application.CreateObjectSpace(typeof(Toy));
             nonPersistentObjectSpace.AdditionalObjectSpaces.Add(persistentOS);
             ObjectSpace.CustomRefresh += ObjectSpace_CustomRefresh;
+            View.CreateCustomCurrentObjectDetailView += NonPersistentController_CreateCustomCurrentObjectDetailView;
+
+           
             ObjectSpace.Refresh();
         }
         protected override void OnDeactivated()
@@ -132,6 +137,7 @@ namespace Toys.Module.Controllers
                 nonPersistentObjectSpace.ObjectGetting -= NonPersistentObjectSpace_ObjectGetting;
                 nonPersistentObjectSpace.Committing -= NonPersistentObjectSpace_Committing;
                 ObjectSpace.CustomRefresh -= ObjectSpace_CustomRefresh;
+                View.CreateCustomCurrentObjectDetailView -= NonPersistentController_CreateCustomCurrentObjectDetailView;
                 var persistentOS = nonPersistentObjectSpace.AdditionalObjectSpaces.FirstOrDefault();
                 if (persistentOS != null)
                 {
@@ -141,7 +147,37 @@ namespace Toys.Module.Controllers
             }
             base.OnDeactivated();
         }
+        private void NonPersistentController_CreateCustomCurrentObjectDetailView(object sender, CreateCustomCurrentObjectDetailViewEventArgs e)
+        {
 
+            UpdateCacheFromObjectSpace();
+            //var gridEditor = View.Editor as GridListEditor;
+            //var objects = gridEditor.GetSelectedObjects();
+            //var focussedObj = gridEditor.FocusedObject as INonPersistent;
+            //var curObj = View.CurrentObject as INonPersistent;
+            //if (focussedObj?.Id != curObj?.Id)
+            //{
+
+            //    Trace.WriteLine($"focus:{focussedObj?.Id} cur:{curObj?.Id}");
+            //}
+            //Trace.WriteLine($"Focussed obj is {focussedObj?.Id}");
+            //foreach (INonPersistent npObj in objects)
+            //{
+
+            //    gridEditor.FocusedObject = npObj;
+            //    Trace.WriteLine($"obj id:{npObj.Id} index {npObj.CacheIndex}");
+            //    View.CurrentObject = npObj;
+            //}
+
+            var obj = View.CurrentObject as IXafEntityObject;
+            var objAsnp = obj as INonPersistent;
+            Trace.WriteLine($"objAsNp id:{objAsnp?.Id} index {objAsnp?.CacheIndex}");
+            obj?.OnLoaded();
+            Trace.WriteLine("");
+
+
+
+        }
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
@@ -170,6 +206,16 @@ namespace Toys.Module.Controllers
              View.ObjectSpace.Refresh();
         }
 
-        
+        private void UpdateCacheFromObjectSpace() // causes view refresh
+        {
+
+            foreach (INonPersistent obj in ObjectSpace.ModifiedObjects)
+            {
+                var cacheObj = objectsCache.Find(x => x.Id == obj.Id);
+                objectsCache[cacheObj.CacheIndex] = obj;
+            }
+
+
+        }
     }
 }

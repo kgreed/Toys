@@ -28,7 +28,9 @@ namespace Toys.Module.BusinessObjects
         [DevExpress.ExpressApp.Data.Key]
         [ModelDefault("AllowEdit", "False")]
         public int Id { get; set; }
-       
+        [ModelDefault("AllowEdit", "False")]
+        public int CacheIndex { get; set; }
+
         public string Name { get; set; }
 
         [ModelDefault("AllowEdit", "False")]
@@ -63,7 +65,6 @@ namespace Toys.Module.BusinessObjects
             var connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (var connect = new ToysDbContext(connectionString))
             {
-
                 var parameters = new List<SqlParameter>();
                 var sql = "select t.Id, t.Name, c.Id as CategoryId, c.Name as CategoryName from toys t inner join categories c on t.Category_Id = c.Id";
             
@@ -72,9 +73,15 @@ namespace Toys.Module.BusinessObjects
                     sql += " where t.name like @name";
                     parameters.Add( new SqlParameter("@name",$"%{SearchText}%"));
                 }
-
                 var results = connect.Database.SqlQuery<NPToy>(sql,parameters.ToArray()).ToList();
-                return results.ConvertAll(x => (INonPersistent)x);
+                var npresults = results.ConvertAll(x => (INonPersistent)x);
+                var index = 0;
+                foreach (INonPersistent np in npresults)
+                {
+                    np.CacheIndex = index;
+                    index++;
+                }
+                return npresults;
             }
         }
 

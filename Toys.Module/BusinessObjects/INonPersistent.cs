@@ -10,5 +10,7 @@ namespace Toys.Module.BusinessObjects
 
         void NPOnSaving(IObjectSpace persistentOs);
         string SearchText { get; set; }
+        int Id { get; set; }
+        int CacheIndex { get; set; }
     }
 }
