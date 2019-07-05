@@ -22,24 +22,18 @@ namespace Toys.Module.BusinessObjects {
         {
             Database.SetInitializer(new MyInitializer());
         }
+        //public ToysDbContext()
+        //    : base("name=ConnectionString")
+        //{
+        //     Database.SetInitializer(new MyInitializer());
+        //}
         public ToysDbContext()
-            : base("name=ConnectionString")
         {
-             Database.SetInitializer(new MyInitializer());
         }
-
-       // public ToysDbContext() { }
 
         public DbSet<ModuleInfo> ModulesInfo { get; set; }
         public DbSet<Toy> Toys { get; set; }
         public DbSet<Category> Categories { get; set; }
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<Toy>().ToTable("Toys");
-            //modelBuilder.Entity<Category>().ToTable("Categories");
-            //modelBuilder.Entity<Category>().HasMany(x=>x.t)
-
-        }
+ 
     }
 }

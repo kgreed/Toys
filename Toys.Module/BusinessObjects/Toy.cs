@@ -15,5 +15,7 @@ namespace Toys.Module.BusinessObjects
         public int Category_Id { get; set; }
         [ForeignKey("Category_Id")]
         public virtual Category Category { get; set; }
+
+        public string Make { get; set; }
     }
 }

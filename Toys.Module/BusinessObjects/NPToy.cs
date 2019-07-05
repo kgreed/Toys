@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Configuration;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
@@ -30,19 +31,24 @@ namespace Toys.Module.BusinessObjects
        
         public string Name { get; set; }
 
+        [ModelDefault("AllowEdit", "False")]
         public int CategoryId { get; set; }
 
-        private string _categoryName;
-        public string CategoryName
+
+        [DataSourceProperty("Categories")]
+        [NotMapped]
+
+        IObjectSpace persistentObjectSpace => ((NonPersistentObjectSpace)ObjectSpace)?.AdditionalObjectSpaces?.FirstOrDefault();
+
+        [DataSourceProperty("Categories")]
+        [NotMapped]
+        public virtual Category Category
         {
-            get => _categoryName;
-            set
-            {
-                if (_categoryName == value) return;
-                _categoryName = value;
-                OnPropertyChanged();
-            }
+            get => persistentObjectSpace?.GetObjectByKey<Category>(CategoryId);
+            set => CategoryId = value.Id;
         }
+        [Browsable(false)] public IList<Category> Categories => persistentObjectSpace?.GetObjects<Category>(CriteriaOperator.Parse("[Id] > 0"));
+
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged == null) return;
@@ -54,14 +60,16 @@ namespace Toys.Module.BusinessObjects
         public string SearchText { get; set; }
         public List<INonPersistent> GetData(IObjectSpace os)
         {
-            using (var connect = new ToysDbContext())
+            var connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (var connect = new ToysDbContext(connectionString))
             {
+
                 var parameters = new List<SqlParameter>();
                 var sql = "select t.Id, t.Name, c.Id as CategoryId, c.Name as CategoryName from toys t inner join categories c on t.Category_Id = c.Id";
             
                 if (SearchText?.Length > 0)
                 {
-                    sql = sql + " where t.name like @name";
+                    sql += " where t.name like @name";
                     parameters.Add( new SqlParameter("@name",$"%{SearchText}%"));
                 }
 
@@ -75,10 +83,10 @@ namespace Toys.Module.BusinessObjects
             var os = ((NonPersistentObjectSpace)ObjectSpace).AdditionalObjectSpaces.FirstOrDefault();  // why cant I use this instead of passing in as a parameter?
             var areSame = osParam.Equals(os); // true
 
-            var category = os.FindObject<Category>(CriteriaOperator.Parse("[Name] = ?", CategoryName));
+            var category = os.FindObject<Category>(CriteriaOperator.Parse("[Id] = ?", CategoryId));
             if (category == null)
             {
-                throw new Exception($"I am sorry but you need to type the Category Name exactly. {CategoryName} was not found");
+                throw new Exception($"Category {CategoryId} was not found");
             }
 
             var toy = os.FindObject<Toy>(CriteriaOperator.Parse("[Id] = ?", Id));

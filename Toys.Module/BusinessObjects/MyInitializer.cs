@@ -7,14 +7,11 @@ namespace Toys.Module.BusinessObjects
         protected override void Seed(ToysDbContext context)
         {
             SeedRecords(context);
-
             base.Seed(context);
         }
 
         public static void SeedRecords(ToysDbContext context)
         {
-
-
             var cat1 = new Category { Name = "Education" };
             var cat2 = new Category { Name = "Baby" };
             var cat3 = new Category { Name = "Toddler" };
@@ -30,8 +27,6 @@ namespace Toys.Module.BusinessObjects
             context.Toys.Add(toy2);
             context.Toys.Add(toy3);
             context.SaveChanges();
-
-
         }
     }
 }
