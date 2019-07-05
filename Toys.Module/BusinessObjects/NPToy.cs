@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Configuration;
@@ -12,7 +11,9 @@ using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Model;
 using DevExpress.Persistent.Base;
- 
+using DevExpress.XtraScheduler.Outlook.Interop;
+using Exception = System.Exception;
+
 
 namespace Toys.Module.BusinessObjects
 {
@@ -31,10 +32,28 @@ namespace Toys.Module.BusinessObjects
         [ModelDefault("AllowEdit", "False")]
         public int CacheIndex { get; set; }
 
-        public string Name { get; set; }
+        private string _name;
+        [ImmediatePostData]
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private int _CategoryId;
         [ModelDefault("AllowEdit", "False")]
-        public int CategoryId { get; set; }
+        public int CategoryId {
+            get => _CategoryId;
+            set
+            {
+                _CategoryId = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         [DataSourceProperty("Categories")]
@@ -44,11 +63,17 @@ namespace Toys.Module.BusinessObjects
 
         [DataSourceProperty("Categories")]
         [NotMapped]
+        [ImmediatePostData]
         public virtual Category Category
         {
             get => persistentObjectSpace?.GetObjectByKey<Category>(CategoryId);
-            set => CategoryId = value.Id;
+            set
+            {
+                CategoryId = value.Id; 
+                OnPropertyChanged();
+            }
         }
+
         [Browsable(false)] public IList<Category> Categories => persistentObjectSpace?.GetObjects<Category>(CriteriaOperator.Parse("[Id] > 0"));
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

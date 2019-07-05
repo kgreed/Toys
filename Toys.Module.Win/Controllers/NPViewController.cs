@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.Win.Editors;
 using Toys.Module.BusinessObjects;
 using ListView = DevExpress.ExpressApp.ListView;
 
@@ -105,11 +106,16 @@ namespace Toys.Module.Controllers
                 }
             }
             persistentOS.CommitChanges();
-            objectSpace.Rollback(false);
-            objectSpace.Refresh();  // focus goes to first
+            //objectSpace.Rollback(false);
+            //objectSpace.Refresh();  // focus goes to first
         }
 
-
+        private void ObjectSpace_ObjectChanged(object sender, ObjectChangedEventArgs e)
+        {
+            GridListEditor editor = View.Editor as GridListEditor;
+            if (editor != null && editor.GridView != null && editor.GridView.FocusedRowHandle >= 0)
+                editor.GridView.RefreshRow(editor.GridView.FocusedRowHandle);
+        }
 
 
         protected override void OnActivated()
@@ -123,6 +129,7 @@ namespace Toys.Module.Controllers
             var persistentOS = this.Application.CreateObjectSpace(typeof(Toy));
             nonPersistentObjectSpace.AdditionalObjectSpaces.Add(persistentOS);
             ObjectSpace.CustomRefresh += ObjectSpace_CustomRefresh;
+            ObjectSpace.ObjectChanged += ObjectSpace_ObjectChanged;
             View.CreateCustomCurrentObjectDetailView += NonPersistentController_CreateCustomCurrentObjectDetailView;
 
            
@@ -145,6 +152,7 @@ namespace Toys.Module.Controllers
                     persistentOS.Dispose();
                 }
             }
+            ObjectSpace.ObjectChanged -= ObjectSpace_ObjectChanged;
             base.OnDeactivated();
         }
         private void NonPersistentController_CreateCustomCurrentObjectDetailView(object sender, CreateCustomCurrentObjectDetailViewEventArgs e)
