@@ -22,18 +22,17 @@ namespace Toys.Module.BusinessObjects {
         {
             Database.SetInitializer(new MyInitializer());
         }
-        //public ToysDbContext()
-        //    : base("name=ConnectionString")
-        //{
-        //     Database.SetInitializer(new MyInitializer());
-        //}
+         
         public ToysDbContext()
         {
         }
 
         public DbSet<ModuleInfo> ModulesInfo { get; set; }
         public DbSet<Toy> Toys { get; set; }
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<BabyToy> BabyToys { get; set; }
+        public DbSet<ToddlerToy> ToddlerToys { get; set; }
+
+        public DbSet<Brand> Brands { get; set; }
  
     }
 }

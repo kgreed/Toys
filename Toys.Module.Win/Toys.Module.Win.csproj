@@ -345,9 +345,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\NPViewController.cs">
-      <SubType>Component</SubType>
+    <Compile Include="Controllers\NPViewController.cs" />
+    <Compile Include="Editors\BabyControl.cs">
+      <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Editors\BabyControl.Designer.cs">
+      <DependentUpon>BabyControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\BabyEditor.cs" />
+    <Compile Include="Editors\PreSchoolControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\PreSchoolControl.Designer.cs">
+      <DependentUpon>PreSchoolControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\PreSchoolEditor.cs" />
+    <Compile Include="Editors\ToddlerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Editors\ToddlerControl.Designer.cs">
+      <DependentUpon>ToddlerControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ToddlerEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WinModule.cs">
       <SubType>Component</SubType>
@@ -359,6 +378,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Controllers\NPViewController.resx">
       <DependentUpon>NPViewController.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\BabyControl.resx">
+      <DependentUpon>BabyControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\PreSchoolControl.resx">
+      <DependentUpon>PreSchoolControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\ToddlerControl.resx">
+      <DependentUpon>ToddlerControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
     <EmbeddedResource Include="Properties\licenses.licx" />

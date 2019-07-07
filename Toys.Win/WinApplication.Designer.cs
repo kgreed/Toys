@@ -27,6 +27,7 @@
             this.module2 = new DevExpress.ExpressApp.Win.SystemModule.SystemWindowsFormsModule();
             this.module3 = new Toys.Module.ToysModule();
             this.module4 = new Toys.Module.Win.ToysWindowsFormsModule();
+            this.conditionalAppearanceModule1 = new DevExpress.ExpressApp.ConditionalAppearance.ConditionalAppearanceModule();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // ToysWindowsFormsApplication
@@ -37,10 +38,10 @@
             this.Modules.Add(this.module2);
             this.Modules.Add(this.module3);
             this.Modules.Add(this.module4);
+            this.Modules.Add(this.conditionalAppearanceModule1);
             this.UseOldTemplates = false;
             this.DatabaseVersionMismatch += new System.EventHandler<DevExpress.ExpressApp.DatabaseVersionMismatchEventArgs>(this.ToysWindowsFormsApplication_DatabaseVersionMismatch);
             this.CustomizeLanguagesList += new System.EventHandler<DevExpress.ExpressApp.CustomizeLanguagesListEventArgs>(this.ToysWindowsFormsApplication_CustomizeLanguagesList);
-
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -51,5 +52,6 @@
         private DevExpress.ExpressApp.Win.SystemModule.SystemWindowsFormsModule module2;
         private Toys.Module.ToysModule module3;
         private Toys.Module.Win.ToysWindowsFormsModule module4;
+        private DevExpress.ExpressApp.ConditionalAppearance.ConditionalAppearanceModule conditionalAppearanceModule1;
     }
 }

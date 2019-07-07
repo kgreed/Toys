@@ -106,8 +106,7 @@ namespace Toys.Module.Controllers
                 }
             }
             persistentOS.CommitChanges();
-            //objectSpace.Rollback(false);
-            //objectSpace.Refresh();  // focus goes to first
+           
         }
 
         private void ObjectSpace_ObjectChanged(object sender, ObjectChangedEventArgs e)

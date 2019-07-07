@@ -234,11 +234,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusinessObjects\Category.cs" />
+    <Compile Include="BusinessObjects\Brand.cs" />
+    <Compile Include="BusinessObjects\BabyToy.cs" />
     <Compile Include="BusinessObjects\INonPersistent.cs" />
     <Compile Include="BusinessObjects\MyInitializer.cs" />
     <Compile Include="BusinessObjects\NPToy.cs" />
+    <Compile Include="BusinessObjects\PreSchoolToy.cs" />
+    <Compile Include="BusinessObjects\ToddlerToy.cs" />
     <Compile Include="BusinessObjects\Toy.cs" />
+    <Compile Include="BusinessObjects\ToyCategoryEnum.cs" />
     <Compile Include="BusinessObjects\ToysContextInitializer.cs" />
     <Compile Include="DatabaseUpdate\Updater.cs" />
     <Compile Include="Module.cs">
