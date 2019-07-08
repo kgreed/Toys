@@ -102,7 +102,7 @@ namespace Toys.Module.Controllers
                 {
                     ((NonPersistentObjectSpace)objectSpace).GetObject(obj);
                     //((IXafEntityObject)obj).OnSaving();
-                    ((INonPersistent)obj).NPOnSaving(persistentOS);
+                   // ((INonPersistent)obj).NPOnSaving(persistentOS);
                 }
             }
             persistentOS.CommitChanges();
@@ -158,23 +158,7 @@ namespace Toys.Module.Controllers
         {
 
             UpdateCacheFromObjectSpace();
-            //var gridEditor = View.Editor as GridListEditor;
-            //var objects = gridEditor.GetSelectedObjects();
-            //var focussedObj = gridEditor.FocusedObject as INonPersistent;
-            //var curObj = View.CurrentObject as INonPersistent;
-            //if (focussedObj?.Id != curObj?.Id)
-            //{
-
-            //    Trace.WriteLine($"focus:{focussedObj?.Id} cur:{curObj?.Id}");
-            //}
-            //Trace.WriteLine($"Focussed obj is {focussedObj?.Id}");
-            //foreach (INonPersistent npObj in objects)
-            //{
-
-            //    gridEditor.FocusedObject = npObj;
-            //    Trace.WriteLine($"obj id:{npObj.Id} index {npObj.CacheIndex}");
-            //    View.CurrentObject = npObj;
-            //}
+        
 
             var obj = View.CurrentObject as IXafEntityObject;
             var objAsnp = obj as INonPersistent;

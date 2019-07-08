@@ -353,6 +353,7 @@
       <DependentUpon>BabyControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\BabyEditor.cs" />
+    <Compile Include="Editors\CustomIntegerEditor.cs" />
     <Compile Include="Editors\PreSchoolControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

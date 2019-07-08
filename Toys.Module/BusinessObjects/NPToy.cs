@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Configuration;
@@ -14,7 +15,7 @@ using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.Persistent.Base;
 using DevExpress.XtraScheduler.Outlook.Interop;
- 
+using Toys.Module.DTO;
 using Exception = System.Exception;
 
 
@@ -23,7 +24,7 @@ namespace Toys.Module.BusinessObjects
     [DomainComponent]
     [DefaultClassOptions]
     [NavigationItem("1 Main")]
-    public class NPToy : INonPersistent, IObjectSpaceLink, INotifyPropertyChanged
+    public class NPToy : INonPersistent, IObjectSpaceLink, INotifyPropertyChanged, IXafEntityObject
     {
         public NPToy() {
             
@@ -80,7 +81,27 @@ namespace Toys.Module.BusinessObjects
             set => _babyToy = value;
         }
 
-        
+        private PreSchoolToy _preSchoolToy;
+
+        [Appearance("IsPreSchoolToy", Visibility = ViewItemVisibility.Hide, Criteria = "[ToyCategoryNum] != 3")]
+        [VisibleInListView(false)]
+        [NotMapped]
+        public PreSchoolToy PreSchoolToy
+        {
+            get => ToyCategoryNum != ToyCategoryEnum.PreSchool? null : _preSchoolToy;
+            set => _preSchoolToy = value;
+        }
+
+        private ToddlerToy _toddlerToy;
+        [Appearance("IsToddlerToy", Visibility = ViewItemVisibility.Hide, Criteria = "[ToyCategoryNum] != 2")]
+        [VisibleInListView(false)]
+        [NotMapped]
+        public ToddlerToy ToddlerToy
+        {
+            get => ToyCategoryNum != ToyCategoryEnum.Toddler ? null : _toddlerToy;
+            set => _toddlerToy = value;
+        }
+
         [NotMapped]
 
         IObjectSpace persistentObjectSpace => ((NonPersistentObjectSpace)ObjectSpace)?.AdditionalObjectSpaces?.FirstOrDefault();
@@ -149,14 +170,67 @@ namespace Toys.Module.BusinessObjects
             toy.Name = Name;
             toy.Brand = brand;
             toy.ToyCategory = ToyCategory;
-            os.SetModified(toy);
+            switch (ToyCategoryNum)
+            {
+                case ToyCategoryEnum.Baby:
+                    
+                    toy.BabyToy.GoodForCrawling = BabyToy.GoodForCrawling;
+                    toy.BabyToy.HelpsTeething = BabyToy.HelpsTeething;
+                    os.SetModified(toy.BabyToy);
+                    break;
+                case ToyCategoryEnum.Toddler:
+                    break;
+                case ToyCategoryEnum.PreSchool:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+             os.SetModified(toy);
         }
 
         [NotMapped]
         [Browsable(false)]
         public IObjectSpace ObjectSpace { get; set; }
+        
+
         public event PropertyChangedEventHandler PropertyChanged;
+        public void SetModified()
+        {
+            ObjectSpace.SetModified(this);
+        }
+        public void OnCreated()
+        {
+            //throw new NotImplementedException();
+        }
 
+        public void OnSaving()
+        {
+            //throw new NotImplementedException();
+        }
 
+        public void OnLoaded()
+        {
+            switch (ToyCategoryNum)
+            {
+                case ToyCategoryEnum.Baby:
+                    var os = ((NonPersistentObjectSpace)ObjectSpace).AdditionalObjectSpaces.FirstOrDefault();
+                    BabyToy = os.FindObject<BabyToy>(CriteriaOperator.Parse("[Id]=?", Id));
+                    if (BabyToy == null)
+                    {
+                        BabyToy = os.CreateObject<BabyToy>();
+                        BabyToy.Id = Id;
+                    }
+
+                   
+                    break;
+                case ToyCategoryEnum.Toddler:
+                    break;
+                case ToyCategoryEnum.PreSchool:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+        }
     }
 }

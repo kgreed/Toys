@@ -245,6 +245,9 @@
     <Compile Include="BusinessObjects\ToyCategoryEnum.cs" />
     <Compile Include="BusinessObjects\ToysContextInitializer.cs" />
     <Compile Include="DatabaseUpdate\Updater.cs" />
+    <Compile Include="DTO\BabyToyDto.cs" />
+    <Compile Include="DTO\PreSchoolToyDto.cs" />
+    <Compile Include="DTO\ToddlerToyDto.cs" />
     <Compile Include="Module.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -33,6 +33,15 @@ namespace Toys.Module.BusinessObjects {
         public DbSet<ToddlerToy> ToddlerToys { get; set; }
 
         public DbSet<Brand> Brands { get; set; }
- 
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Toy>().HasOptional(x => x.BabyToy).WithRequired(y => y.Toy);
+            modelBuilder.Entity<Toy>().HasOptional(x => x.PreSchoolToy).WithRequired(y => y.Toy);
+            modelBuilder.Entity<Toy>().HasOptional(x => x.ToddlerToy).WithRequired(y => y.Toy);
+
+            base.OnModelCreating(modelBuilder);
+
+        }
     }
 }
