@@ -6,7 +6,6 @@ namespace Toys.Module.DTO
     {
         public ToddlerToyDto(ToddlerToy toy)
         {
-
             HelpsTalking = toy.HelpsTalking;
             GoodForWalking = toy.GoodForWalking;
         }

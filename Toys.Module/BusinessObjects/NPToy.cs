@@ -119,7 +119,7 @@ namespace Toys.Module.BusinessObjects
             }
         }
 
-        [Browsable(false)] public IList<Brand> Categories => persistentObjectSpace?.GetObjects<Brand>(CriteriaOperator.Parse("[Id] > 0"));
+        [Browsable(false)] public IList<Brand> Brands => persistentObjectSpace?.GetObjects<Brand>(CriteriaOperator.Parse("[Id] > 0"));
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -170,22 +170,7 @@ namespace Toys.Module.BusinessObjects
             toy.Name = Name;
             toy.Brand = brand;
             toy.ToyCategory = ToyCategory;
-            switch (ToyCategoryNum)
-            {
-                case ToyCategoryEnum.Baby:
-                    
-                    toy.BabyToy.GoodForCrawling = BabyToy.GoodForCrawling;
-                    toy.BabyToy.HelpsTeething = BabyToy.HelpsTeething;
-                    os.SetModified(toy.BabyToy);
-                    break;
-                case ToyCategoryEnum.Toddler:
-                    break;
-                case ToyCategoryEnum.PreSchool:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-             os.SetModified(toy);
+            os.SetModified(toy);
         }
 
         [NotMapped]
@@ -210,27 +195,37 @@ namespace Toys.Module.BusinessObjects
 
         public void OnLoaded()
         {
+            var os = ((NonPersistentObjectSpace)ObjectSpace).AdditionalObjectSpaces.FirstOrDefault();
+
             switch (ToyCategoryNum)
             {
                 case ToyCategoryEnum.Baby:
-                    var os = ((NonPersistentObjectSpace)ObjectSpace).AdditionalObjectSpaces.FirstOrDefault();
-                    BabyToy = os.FindObject<BabyToy>(CriteriaOperator.Parse("[Id]=?", Id));
-                    if (BabyToy == null)
-                    {
-                        BabyToy = os.CreateObject<BabyToy>();
-                        BabyToy.Id = Id;
-                    }
-
-                   
+                    BabyToy =FindOrMakeToyInfo<BabyToy>(os);
                     break;
                 case ToyCategoryEnum.Toddler:
+                    ToddlerToy = FindOrMakeToyInfo<ToddlerToy>(os);
                     break;
                 case ToyCategoryEnum.PreSchool:
+                    PreSchoolToy = FindOrMakeToyInfo<PreSchoolToy>(os);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             
         }
+
+        private T FindOrMakeToyInfo<T>(IObjectSpace os) where T: IToyType
+        {
+           var toy = os.FindObject<T>(CriteriaOperator.Parse("[Id]=?", Id));
+            if (toy != null) return toy;
+            toy = os.CreateObject<T>();
+            toy.Id = Id;
+            return toy;
+        }
+    }
+
+    internal interface IToyType
+    {
+        int Id { get; set; }
     }
 }

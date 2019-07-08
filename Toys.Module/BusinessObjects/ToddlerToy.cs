@@ -6,7 +6,7 @@ using DevExpress.Persistent.Base;
 namespace Toys.Module.BusinessObjects
 {
     [NavigationItem("2 Data")]
-    public class ToddlerToy 
+    public class ToddlerToy : IToyType
     {
         [ForeignKey("Toy")]
         public int Id { get; set; }

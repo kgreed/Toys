@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Data;
 using System.Data.Entity;
 using System.Data.Common;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Infrastructure;
 using DevExpress.ExpressApp.EF.Updating;
-using DevExpress.Persistent.BaseImpl.EF;
 using DevExpress.ExpressApp.Design;
-using DevExpress.XtraLayout.Customization;
 
 namespace Toys.Module.BusinessObjects {
     [TypesInfoInitializer(typeof(ToysContextInitializer))]
@@ -31,17 +26,13 @@ namespace Toys.Module.BusinessObjects {
         public DbSet<Toy> Toys { get; set; }
         public DbSet<BabyToy> BabyToys { get; set; }
         public DbSet<ToddlerToy> ToddlerToys { get; set; }
-
         public DbSet<Brand> Brands { get; set; }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Toy>().HasOptional(x => x.BabyToy).WithRequired(y => y.Toy);
             modelBuilder.Entity<Toy>().HasOptional(x => x.PreSchoolToy).WithRequired(y => y.Toy);
             modelBuilder.Entity<Toy>().HasOptional(x => x.ToddlerToy).WithRequired(y => y.Toy);
-
             base.OnModelCreating(modelBuilder);
-
         }
     }
 }
